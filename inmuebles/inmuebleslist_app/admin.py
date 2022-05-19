@@ -1,5 +1,6 @@
 from django.contrib import admin
-from inmuebleslist_app.models import Inmueble #referencia del modelo
+from inmuebleslist_app.models import Edificacion, Empresa #referencia del modelo
 
 # Register your models here.
-admin.site.register(Inmueble)
+admin.site.register(Edificacion)
+admin.site.register(Empresa)

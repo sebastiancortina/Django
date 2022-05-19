@@ -1,11 +1,86 @@
 from os import read
+import re
 from rest_framework import serializers
-from inmuebleslist_app.models import Inmueble
+from inmuebleslist_app.models import Edificacion, Empresa
+
+
+class EmpresaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Empresa
+        fields = "__all__"
+    
+
+#permite hacer un mapeo de todo la clase entidad
+class EdificacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Edificacion
+        fields = "__all__"
+        #fields = ['id','pais','active','image']
+        #exclude = ['id']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    """
+    def get_longitud_direccion(self, object):
+        cantidad_caracteres = len(object.direccion)
+        return cantidad_caracteres
+
+    def validate(self, data):
+        if data['direccion'] == data['pais']:
+            raise serializers.ValidationError("La direccion y el pais deben ser difernetes")
+        else:
+            return data
+    
+    def validate_image(self,data):
+        if len(data) < 2:
+            raise serializers.ValidationError("La Url de la imagen es muy corta")
+        else:
+            return data 
+    """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#validacion personalizada 
+"""
+def column_longitud(value):
+    if len(value) < 2:
+        raise serializers.ValidationError("La direccion es demasiado corta")
 
 class InmuebleSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only = True)
-    direccion = serializers.CharField()
-    pais = serializers.CharField()
+    direccion = serializers.CharField(validators = [column_longitud])
+    pais = serializers.CharField(validators = [column_longitud])
     descripcion = serializers.CharField()
     image = serializers.CharField()
     active = serializers.BooleanField()
@@ -22,3 +97,16 @@ class InmuebleSerializer(serializers.Serializer):
         instance.save()
         
         return instance
+    
+    def validate(self, data):
+        if data['direccion'] == data['pais']:
+            raise serializers.ValidationError("La direccion y el pais deben ser difernetes")
+        else:
+            return data
+    
+    def validate_image(self,data):
+        if len(data) < 2:
+            raise serializers.ValidationError("La Url de la imagen es muy corta")
+        else:
+            return data 
+"""
