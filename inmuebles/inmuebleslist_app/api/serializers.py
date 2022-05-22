@@ -1,22 +1,39 @@
-from os import read
-import re
+from turtle import mode
 from rest_framework import serializers
-from inmuebleslist_app.models import Edificacion, Empresa
+from inmuebleslist_app.models import Edificacion, Empresa, Comentario
 
+class ComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comentario
+        exclude = ['edificacion']
+        #fields = "__all__"
+
+
+class EdificacionSerializer(serializers.ModelSerializer):
+    comentarios = ComentarioSerializer(many=True, read_only=True)
+    class Meta:
+        model = Edificacion
+        fields = "__all__"
+        #fields = ['id','pais','active','image']
+        #exclude = ['id']
 
 class EmpresaSerializer(serializers.ModelSerializer):
+    #edificacionlist = serializers.StringRelatedField(many=True, read_only=True)
+    edificacionlist = EdificacionSerializer(many=True, read_only=True)
+    #edificacionlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    #edificacionlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    """edificacionlist = serializers.HyperlinkedRelatedField(
+        many=True, 
+        read_only=True,
+        view_name='edificacion-detalle',
+        )
+    """
     class Meta:
         model = Empresa
         fields = "__all__"
     
 
 #permite hacer un mapeo de todo la clase entidad
-class EdificacionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Edificacion
-        fields = "__all__"
-        #fields = ['id','pais','active','image']
-        #exclude = ['id']
 
 
 
